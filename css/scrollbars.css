@@ -1,0 +1,31 @@
+.ui-container-scrollbars{
+	position:relative;
+}
+
+.ui-scrollbars{
+	position:absolute;
+	top:0px;
+	right:0px;
+	width:10px;
+	height:100%;
+	
+	background-color:#FFF;
+	border:solid 1px #DADADA;
+	padding-top:2px;
+	padding-bottom:2px;
+}
+
+.ui-scrollbars .ui-sb-dragger{
+	background-color:#CCC;
+	width:80%;
+	margin-left:auto;
+	margin-right:auto;
+	min-height:10%;
+}
+
+
+.ui-dgr-round{
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px; 
+}
