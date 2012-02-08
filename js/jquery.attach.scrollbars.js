@@ -127,6 +127,5 @@
 	};
 })(jQuery);
 
-var attachScrollbars = (function() {
-});
+var attachScrollbars = (function() {});
 window.attachScrollbars = window.$attachScrollbars = attachScrollbars;
