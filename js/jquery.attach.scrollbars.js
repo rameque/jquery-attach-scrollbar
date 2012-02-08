@@ -50,6 +50,11 @@
 					instance.methods.responseDrag(ui,instance);
 			}});
 			
+			instance.isObject.mouseenter(function(){
+				instance.methods.updateDragger(instance);
+			}).mouseleave(function(){
+				instance.methods.updateDragger(instance);
+			});
 		},
 		responseDrag:function(ui,instance){
 			var objectUpadted = instance.dragger;
@@ -61,13 +66,20 @@
 			$(instance._instance).scrollTop(ui.position.top * instance.dragger.indice);
 		},
 		updateDragger:function(instance){
-			instance.dragger.sHeight = parseFloat($(instance._instance)[0].scrollHeight) + 10;			
-			instance.dragger.iHeight = parseFloat($(instance.dragger._parent).innerHeight());
+			instance.dragger.sHeight = parseFloat($(instance._instance)[0].scrollHeight);			
+			instance.dragger.iHeight = parseFloat($(instance.dragger._parent).height());
 			instance.dragger.indice = parseFloat(instance.dragger.sHeight/instance.dragger.iHeight);
-			instance.dragger.percent = parseFloat(instance.dragger.iHeight*100)/instance.dragger.sHeight;
+			instance.dragger.percent = Math.round(parseFloat(instance.dragger.iHeight*100)/instance.dragger.sHeight);
 			
 			$(instance.dragger._instance).css('height',instance.dragger.percent+'%');
 			$(instance._instance).scrollTop(parseFloat($(instance.dragger._instance).css('top')) * instance.dragger.indice);
+			
+			
+			if(instance.dragger.percent == 100){
+				$(instance.dragger._instance).parent().fadeOut();
+			}else{
+				$(instance.dragger._instance).parent().fadeIn();
+			}
 			
 			var objectParam =  new Object();
 			$.extend(objectParam, instance.dragger);
