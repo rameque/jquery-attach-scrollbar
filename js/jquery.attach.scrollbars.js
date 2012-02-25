@@ -4,13 +4,16 @@
 	
 	var scrollbarsClass = function(ins,options){
 		this._name = ($(ins).attr('id'))?$(ins).attr('id') : $(ins).attr('class').replace(/ /g,"_");
-		this.pos = window.scrollbars.length;
+		
+
 		this._instance = ins;
 		this.settings = options;
 		this.methods = $.scrollbars.methods;
 		this.dragger = {sHeight:'', iHeight:'', indice:'', percent:'',_instance:''};
+		this.position = window.scrollbars.length;
+
 		$.extend(this.settings,options); 
-		return name;
+		return this;
 	}
 	
 	$.scrollbars = {};
@@ -22,18 +25,14 @@
 	
 	$.scrollbars.methods = {
 		init : function(instance) {
-			$(instance._instance).addClass('sq'+instance.settings.cols);
+
+			$(instance._instance).addClass('scrollbars-'+instance.position);
+			$(instance._instance).wrap('<div class="ui-container-scrollbars" id="ui-scrollbar-'+instance.position+'"/>');
+			$(instance._instance).prepend('<a name="top-sbar-'+instance.position+'"></a>');
+			$(instance._instance).prepend('<div class="ui-scrollbars ui-dgr-round" id="containment-wrapper"><div class="ui-sb-dragger ui-dgr-round"></div></div>');
 			
-			instance.isObject = $('<div class="ui-container-scrollbars" id="ui-scrollbar-'+instance.pos+'"><a name="top-sbar-'+instance.pos+'"></div>');
-			if($(instance._instance).prev().length > 0){
-				$(instance._instance).prev().append(isObject);
-			}else{
-				$(instance._instance).parent().prepend(instance.isObject);
-			}
-			
-			instance.isObject.append($(instance._instance));
-			instance.isObject.append('<div class="ui-scrollbars ui-dgr-round" id="containment-wrapper"><div class="ui-sb-dragger ui-dgr-round"></div></div>')
-			
+			instance.isObject = $('#ui-scrollbar-'+instance.position);
+
 			instance.dragger._container = instance.isObject;
 			instance.dragger._parent = instance.isObject.find('.ui-scrollbars');
 			instance.dragger._instance = instance.isObject.find('.ui-sb-dragger');
@@ -56,6 +55,7 @@
 			}).mouseleave(function(){
 				instance.methods.updateDragger(instance);
 			});
+
 		},
 		responseDrag:function(ui,instance){
 			var objectUpadted = instance.dragger;
@@ -89,10 +89,10 @@
 			$(instance._instance).scrollTop(0);
 			$(instance.dragger._instance).css('top',0);
 		},
-		hide:function(instance){
+		hideScroll:function(instance){
 			$(instance.dragger._parent).hide();
 		},
-		show:function(instance){
+		showScroll:function(instance){
 			$(instance.dragger._parent).show();
 		}
 	};
@@ -100,29 +100,47 @@
 	
 	$.fn.scrollbars = function(options) {
 	
-		if(typeof options != 'string'){
-			var instOptions = $.extend({},$.scrollbars.settings,options);
-			return this.each(function () {
-				var instance = new scrollbarsClass($(this), instOptions);
-				window.scrollbars.push(instance);
-				instance.methods.init(instance);
-			});
-		}else if(typeof options === 'object'){
-			return $.scrollbars.methods.init.apply(this, arguments);
-		}else if(typeof options == 'string'){
-			
-			var instance = this;
-			
+		var __instance = this;
+		
+		__instance.existScrollbars = function(){
+			var $this = $(__instance);
+			var instance = __instance;
 			$.each(window.scrollbars,function(item,value){
-				var id  = $(this).attr('id');
-				if(id == value.name){
+				var id  = ($this.attr('id'))?$this.attr('id') : $this.attr('class').replace(/ /g,"_");
+				if(id == value._name){
 					instance = value;	
 				}
-			})
-			return instance.methods[options].apply(this, [instance]);
+			});
+			return instance;
+		};
+	
+		if(typeof options != 'string'){
+			var instOptions = $.extend({},$.scrollbars.settings,options);
+			var instance = this;
+			
+			return this.each(function () {
+				var $this = $(this);
+				if($this.attr('scrollbars') == 'created'){
+					instance = __instance.existScrollbars();
+					$.extend(instance.settings,options); 
+				}else{
+					instance = new scrollbarsClass(this, instOptions);
+					$this.attr('scrollbars','created');
+					window.scrollbars.push(instance);
+					instance.methods.init(instance);
+				}
+			});
+		}else if(typeof options == 'string'){
+			instance = __instance.existScrollbars();
+			var objectParams = {};
+			objectParams.instance = instance;
+			objectParams.options = options;
+			return instance.methods[options].apply(instance, [objectParams]);
 		}else{
-			$.error('Method ' + method + ' does not exist on jQuery.tooltip');
+			$.error('Method ' + method + ' does not exist on jQuery.scrollbars');
 		}
+		
+		return false;
 		
 	};
 })(jQuery);

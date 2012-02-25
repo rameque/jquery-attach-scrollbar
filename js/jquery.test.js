@@ -6,7 +6,7 @@ $(document).ready(function(){
 	
 	
 	$('#increase-scroll-w').click(function(){
-		$('#content-toscroll').scrollbars('hide');
+		$('#content-toscroll').scrollbars('hideScroll');
 		var h = parseFloat($('#content-toscroll').css('height'));
 		
 		if($('.ui-container-scrollbars').attr('half') == 'true'){
