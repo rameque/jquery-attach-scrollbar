@@ -65,11 +65,6 @@
 			$(instance._instance).scrollTop(ui.position.top * instance.dragger.indice);
 		},
 		updateDragger:function(instance){
-
-			if(!instance.dragger){
-				instance = instance.instance;
-			}
-			
 			$(instance.dragger._instance).parent().hide();
 			
 			instance.dragger.sHeight = parseFloat($(instance._instance)[0].scrollHeight);			
@@ -96,13 +91,7 @@
 			$(instance.dragger._instance).css('top',0);
 		},
 		hideScroll:function(instance){
-			console.log(instance.instance);
-			if(instance.dragger){
-				$(instance.dragger._parent).hide();
-			}else{
-				$(instance.instance.dragger._parent).hide();
-			}
-			
+			$(instance.dragger._parent).hide();
 		},
 		showScroll:function(instance){
 			$(instance.dragger._parent).show();
